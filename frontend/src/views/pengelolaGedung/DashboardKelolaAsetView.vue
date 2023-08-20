@@ -50,7 +50,7 @@
         }
         isLoading.value = true
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        axios.get(`api/adminapp/get-data-mitra-nonvalidasi${userId}${namaMitra}${eMail}&status=2`)
+        axios.get(`api/adminapp/get-data-mitra-nonvalidasi${userId}${namaMitra}${eMail}&status=0`)
           .then((res) => {
             isLoading.value = false
             item.data = res.data.data
@@ -88,24 +88,20 @@
         <div class="container">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><router-link to="/adminapp/dashboard" class="text-warning text-decoration-none">Home</router-link></li>
-              <li class="breadcrumb-item active" aria-current="page">Validasi Mitra</li>
+              <li class="breadcrumb-item"><router-link to="/partnership/dashboard" class="text-warning text-decoration-none">Home</router-link></li>
+              <li class="breadcrumb-item active" aria-current="page">Kelola Aset</li>
             </ol>
           </nav>
           <div class="card mb-3">
             <div class="card-body">
               <div class="row">
                 <div class="col-lg-3">
-                  <label class="form-label">User ID</label>
-                  <input v-model="item.userid" type="text" class="form-control form-control-sm">
+                  <label class="form-label">ID Aset</label>
+                  <input v-model="item.idaset" type="text" class="form-control form-control-sm">
                 </div>
                 <div class="col-lg-3">
-                  <label class="form-label">Email</label>
-                  <input v-model="item.email" type="text" class="form-control form-control-sm">
-                </div>
-                <div class="col-lg-3">
-                  <label class="form-label">Nama Mitra</label>
-                  <input v-model="item.namamitra" type="text" class="form-control form-control-sm">
+                  <label class="form-label">Nama Aset</label>
+                  <input v-model="item.namaaset" type="text" class="form-control form-control-sm">
                 </div>
                 <div class="col-lg-3">
                   <br>
@@ -115,6 +111,11 @@
             </div>
           </div>
           <div class="card mb-3">
+            <div class="card-header">
+              <router-link to="/partnership/dashboard/kelola-aset/tambah" class="btn btn-warning">
+                <i class="bi bi-plus-circle-dotted"></i> Tambah Aset
+              </router-link>
+            </div>
             <div class="card-body">
               <data-table :rows="item.data" 
               :loading="isLoading" 
@@ -123,20 +124,34 @@
                   <table-head>SN</table-head>
                 </template>
                 <template #thead>
-                  <table-head>Nama Mitra</table-head>
-                  <table-head>Email</table-head>
-                  <table-head>Alamat</table-head>
+                  <table-head>Nama Aset</table-head>
+                  <table-head>Harga</table-head>
+                  <table-head>Harga Diskon</table-head>
+                  <table-head>Status Aset</table-head>
                   <table-head/>
                 </template>
                 <template #tbody-sn="{sn}">
                   <table-head v-text="sn.toString().padStart(2, '0')"/>
                 </template>
                 <template #tbody="{row}">
-                  <table-body v-text="row.namamitra"/>
-                  <table-body v-text="row.email" />
-                  <table-body v-text="row.alamat"/>
+                  <table-body>Gedung A</table-body>
+                  <table-body>Rp. 4000000</table-body>
                   <table-body>
-                    <router-link :to="{ path: '/adminapp/dashboard/detail-validasi-mitra/' + row.email }" class="btn btn-sm btn-info"><i class="bi bi-check-circle"></i></router-link>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" aria-label="Recipient's username" :value="100000">
+                      <button class="btn btn-warning" type="button"><i class="bi bi-save"></i></button>
+                    </div>
+                  </table-body>
+                  <table-body>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" value="false">
+                      <label class="form-check-label">Aktif</label>
+                    </div>
+                  </table-body>
+                  <!-- <table-body v-text="row.email" />
+                  <table-body v-text="row.alamat"/> -->
+                  <table-body>
+                    <router-link :to="{ path: '/partnership/dashboard/detail-aset-mitra/' + row.idmiitra }" class="btn btn-sm btn-success"><i class="bi bi-pencil-square"></i></router-link>
                   </table-body>
                 </template>
                 <template #empty>

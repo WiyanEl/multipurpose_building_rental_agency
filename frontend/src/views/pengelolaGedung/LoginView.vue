@@ -23,7 +23,7 @@
             })
           } else if (roleuser == 3) {
             router.push({
-              path: '/partnership/daashboard'
+              path: '/partnership/dashboard'
             })
           }
         }

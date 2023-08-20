@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,11 +8,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: AboutView
     },
     {
       path: '/partnership',
@@ -41,9 +35,19 @@ const router = createRouter({
       component: () => import('../views/pengelolaGedung/PendaftaranMitraView.vue')
     },
     {
-      path: '/partnership/daashboard',
+      path: '/partnership/dashboard',
       name: 'partnershipDashboard',
       component: () => import('../views/pengelolaGedung/DashboardMitraView.vue')
+    },
+    {
+      path: '/partnership/dashboard/kelola-aset',
+      name: 'partnershipDashboardKelolaAset',
+      component: () => import('../views/pengelolaGedung/DashboardKelolaAsetView.vue')
+    },
+    {
+      path: '/partnership/dashboard/kelola-aset/tambah',
+      name: 'partnershipDashboardTambahAset',
+      component: () => import('../views/pengelolaGedung/DashboardTambahAsetView.vue')
     },
     {
       path: '/adminapp/login',

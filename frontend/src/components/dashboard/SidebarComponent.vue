@@ -71,7 +71,7 @@
     </ul>
     <ul class="nav" v-if="roleuser == 3">
       <li>
-        <router-link to="/partnership/daashboard">
+        <router-link to="/partnership/dashboard">
           <i class="bi bi-layout-text-window-reverse"></i>
           <span class="link_name">Dashboard</span>
         </router-link>
