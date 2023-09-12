@@ -50,7 +50,7 @@
         }
         isLoading.value = true
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        axios.get(`api/adminapp/get-data-mitra-nonvalidasi${userId}${namaMitra}${eMail}&status=2`)
+        axios.get(`api/adminapp/get-data-mitra-nonvalidasi${userId}${namaMitra}${eMail}&status=0`)
           .then((res) => {
             isLoading.value = false
             item.data = res.data.data

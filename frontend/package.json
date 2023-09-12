@@ -8,17 +8,26 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/vue3": "^6.1.8",
+    "@gaiaz/vue-image-slider": "^1.1.5",
     "@jobinsjp/vue3-datatable": "^1.0.15",
     "@popperjs/core": "^2.11.8",
+    "@vuepic/vue-datepicker": "^6.0.1",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
+    "moment": "^2.29.4",
     "vue": "^3.3.2",
+    "vue-future-slider": "^1.0.5",
     "vue-router": "^4.2.0",
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
+    "sass": "^1.66.1",
     "vite": "^4.3.5"
   }
 }

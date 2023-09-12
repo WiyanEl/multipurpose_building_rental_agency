@@ -10,3 +10,8 @@
 .navbar {
   min-height: 75px;
 }
+
+.slider {
+  width: inherit;
+  height: inherit;
+}

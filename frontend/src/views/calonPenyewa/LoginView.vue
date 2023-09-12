@@ -17,11 +17,19 @@
 
       onMounted(() => {
         if (token) {
-          if (roleuser == 1) {
+          if (roleuser == 2) {
             router.push({
-              path: '/adminapp/dashboard'
+              path: '/partnership/pendaftaran-mitra'
             })
-          } 
+          } else if (roleuser == 3) {
+            router.push({
+              path: '/partnership/dashboard'
+            })
+          } else if (roleuser == 4) {
+            router.push({
+              path: '/'
+            })
+          }
         }
       })
 
@@ -37,12 +45,12 @@
               localStorage.setItem('iduser', res.data.data.id)
               localStorage.setItem('emailuser', res.data.data.email)
               localStorage.setItem('roleuser', res.data.data.user_role)
-              if (res.data.data.user_role == 1) {
+              if (res.data.data.user_role == 4) {
                 router.push({
-                  path: '/adminapp/dashboard'
+                  'path': '/'
                 })
               } else  {
-                toast.warning('Anda bukanlah Admin', {
+                toast.warning('Akun Anda bukan akun penyewa', {
                   type: 'warning',
                   position: 'top-right',
                   duration: '3000'
@@ -74,15 +82,18 @@
 </script>
 
 <template>
-  <div class="registrasi-page bg-warning">
+  <div class="registrasi-page">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-5">
         <div class="card m-5 shadow">
           <div class="card-body">
             <div class="container">
               <h4 class="card-title">
-                Selamat Datang
+                Selamat Datang Kembali
               </h4>
+              <p class="card-text">
+                Masuk untuk dapat melihat dan memesan gedung yang Anda perlukan
+              </p>
               <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input v-model="item.email" type="email" class="form-control">
@@ -93,6 +104,9 @@
               </div>
               <div class="mb-3 d-grid gap-2">
                 <button type="button" class="btn btn-info text-light rounded btn-full" @click="login($event)">Login</button>
+              </div>
+              <div class="mb-3">
+                <span>Belum memiliki akun? <router-link to="/registrasi" class="text-decoration-none">Daftar di sini</router-link></span>
               </div>
             </div>
           </div>

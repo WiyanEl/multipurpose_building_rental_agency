@@ -6,6 +6,7 @@
   export default {
     setup() {
       const token = localStorage.getItem('token')
+      const roleUser = localStorage.getItem('roleuser')
       const router = useRouter()
       const item = reactive({
         ucapan: ''
@@ -56,9 +57,16 @@
               localStorage.removeItem('iduser')
               localStorage.removeItem('emailuser')
               localStorage.removeItem('roleuser')
-              router.push({
-                path: '/adminapp/login'
-              })
+              localStorage.removeItem('idmitra')
+              if (roleUser == 1) {
+                router.push({
+                  path: '/adminapp/login'
+                })
+              } else {
+                router.push({
+                  path: '/partnership/login'
+                })
+              }
             }
           })
           .catch((err) => {

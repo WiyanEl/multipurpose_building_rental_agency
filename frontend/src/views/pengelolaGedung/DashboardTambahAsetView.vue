@@ -18,11 +18,15 @@
     },
     setup() {
       const token = localStorage.getItem('token')
+      const idAset = localStorage.getItem('idaset')
+      const idMitra = localStorage.getItem('idmitra')
+      const emailUser = localStorage.getItem('emailuser')
       const toast = useToast()
       const router = useRouter()
       const isLoading = ref(false)
       const item = reactive({
         images: [],
+        fileImages: [],
         isTambahan: false,
         dataFasilitas: []
       })
@@ -32,7 +36,9 @@
       })
 
       function init() {
-        
+        if (idAset != undefined) {
+
+        }
       }
 
       function handleFileUpload(event) {
@@ -46,6 +52,7 @@
             })
           }
           reader.readAsDataURL(images[i])
+          item.fileImages.push(images[i])
         }
       }
 
@@ -85,6 +92,15 @@
           return
         }
 
+        if (item.tersedia == undefined) {
+          toast.warning('Jumlah Tersedia belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
         let no = 0;
         if ( item.dataFasilitas.length > 0 ) {
           no = item.dataFasilitas.length + 1
@@ -96,7 +112,8 @@
           no: no,
           namafasilitas: item.namaTambahan,
           hargafasilitas: item.hargaTambahan,
-          statusfasilitas: item.statusTambahan
+          statusfasilitas: item.statusTambahan,
+          tersedia: item.tersedia,
         }
 
         item.dataFasilitas.push(data)
@@ -108,6 +125,7 @@
         item.namaTambahan = undefined
         item.hargaTambahan = undefined
         item.statusTambahan = undefined
+        item.tersedia = 0
       }
 
       function hapusTambahan(no) {
@@ -147,6 +165,126 @@
         item.hargaSewa = undefined
         item.persenDiskon = undefined
         item.hargaDiskon = undefined
+        item.ceklistTambahan = false
+        getCeckTambahan()
+      }
+
+      function simpan(event) {
+        let idAsetSave = ''
+        if (idAset != undefined) {
+          idAsetSave = idAset
+        }
+
+        if (item.namaAset == undefined) {
+          toast.warning('Nama Aset belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
+        if (item.deskripsi == undefined) {
+          toast.warning('Deskripsi belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
+        if (item.hargaSewa == undefined) {
+          toast.warning('Harga Sewa belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
+        if (item.maxJam == undefined) {
+          toast.warning('Maksimal Jam Penyewaan Sewa belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
+        if (item.images.length <= 0) {
+          toast.warning('Gambar belum diisi', {
+            type: 'warning',
+            position: 'top-right',
+            duration: '3000'
+          })
+          return
+        }
+
+        let jsonSave = {
+          id_aset: idAsetSave,
+          id_mitra: idMitra,
+          namaaset: item.namaAset,
+          deskripsi: item.deskripsi,
+          hargasewa: item.hargaSewa,
+          persendiskon: item.persenDiskon,
+          hargadiskon: item.hargaDiskon,
+          maxjamsewa: item.maxJam,
+          kapasitas: item.kapasitas,
+          statusaset: 1,
+          fasilitastambaan: item.dataFasilitas
+        }
+
+        let btn = event.target
+        btn.innerHTML = `
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        `
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        axios.post(`api/pengelola/save-data-aset`, jsonSave)
+          .then((res) => {
+            toast.success(res.data.message, {
+              type: 'success',
+              position: 'top-right',
+              duration: '3000'
+            })
+            if (res.data.success) {
+              const formData = new FormData()
+              Array.from(item.fileImages).forEach(image => {
+                formData.append('images[]', image)
+              })
+              formData.append('idaset', res.data.data.id)
+              formData.append('emailuser', emailUser)
+
+              axios.defaults.headers.common.Authorization = `Bearer ${token}`
+              axios.post('api/pengelola/simpan-gambar-aset', formData)
+                .then((resp) => {
+                  if (resp.data.success) {
+                    toast.success(resp.data.message, {
+                      type: 'success',
+                      position: 'top-right',
+                      duration: '3000'
+                    })
+                  } 
+                  btn.innerHTML = 'Simpan'
+                  batal()
+                })
+                .catch((err) => {
+                  toast.error('Terjadi Kesalahan Saat Simpan Gambar', {
+                    type: 'error',
+                    position: 'top-right',
+                    duration: '3000'
+                  })
+                  btn.innerHTML = 'Simpan'
+                })
+            }
+          })
+          .catch((err) => {
+            toast.error('Simpan Gagal! Cek Kembali Data', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+            btn.innerHTML = `Simpan`
+          })
       }
 
       return {
@@ -159,7 +297,8 @@
         hapusTambahan,
         getDiskon,
         setDiskonNol,
-        batal
+        batal,
+        simpan
       }
     }
   }
@@ -175,7 +314,7 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><router-link to="/partnership/dashboard" class="text-warning text-decoration-none">Home</router-link></li>
-              <li class="breadcrumb-item"><router-link to="partnership/dashboard/kelola-aset" class="text-warning text-decoration-none">Kelola Aset</router-link></li>
+              <li class="breadcrumb-item"><router-link to="/partnership/dashboard/kelola-aset" class="text-warning text-decoration-none">Kelola Aset</router-link></li>
               <li class="breadcrumb-item active" aria-current="page">Tambah Aset</li>
             </ol>
           </nav>
@@ -219,6 +358,14 @@
                   </div>
                 </div>
               </div>
+              <div class="mb-3">
+                <label class="form-label">Jam Maksimal Sewa</label>
+                <input v-model="item.maxJam" type="text" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Kapasitas (Orang)</label>
+                <input v-model="item.kapasitas" type="text" class="form-control" required>
+              </div>
               <div>
                 <div class="form-check">
                   <input v-model="item.ceklistTambahan" class="form-check-input" type="checkbox" id="ceklistTambahan" @click="getCeckTambahan">
@@ -234,11 +381,15 @@
                           <label class="form-label">Nama Tambahan</label>
                           <input v-model="item.namaTambahan" type="text" class="form-control">
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                           <label class="form-label">Harga</label>
                           <input v-model="item.hargaTambahan" type="text" class="form-control">
                         </div>
                         <div class="col-2">
+                          <label class="form-label">Tersedia</label>
+                          <input v-model="item.tersedia" type="text" class="form-control">
+                        </div>
+                        <div class="col-1">
                           <br>
                           <input v-model="item.statusTambahan" class="form-check-input" type="checkbox">
                           <label class="form-check-label">Aktif</label>
@@ -284,7 +435,7 @@
               </div>
               <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-danger me-2" @click="batal()">Batal</button>
-                <button type="button" class="btn btn-warning" @click="simpan()">Simpan</button>
+                <button type="button" class="btn btn-warning" @click="simpan($event)">Simpan</button>
               </div>
             </div>
           </div>

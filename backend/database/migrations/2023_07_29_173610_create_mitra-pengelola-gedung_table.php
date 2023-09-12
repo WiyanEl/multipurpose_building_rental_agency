@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('norekening');
             $table->string('gambar');
             $table->string('path');
+            $table->float('makskapasitas');
+            $table->string('fasilitas');
             $table->boolean('statusmitra');
             $table->timestamps();
         });

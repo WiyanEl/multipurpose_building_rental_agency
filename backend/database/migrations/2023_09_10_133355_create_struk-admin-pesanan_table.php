@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gambar_asets', function (Blueprint $table) {
+        Schema::create('struk_admin_pesanans', function (Blueprint $table) {
             $table->id();
             $table->boolean('statusenabled');
-            $table->integer('idaset');
-            $table->string('namafile');
-            $table->string('filepath');
+            $table->integer('idpesanan');
+            $table->integer('idstrukpembayaran');
+            $table->timestamp('tglbayar');
+            $table->float('totaltagihan');
+            $table->float('hargaadmin');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('namafile');
+        //
     }
 };

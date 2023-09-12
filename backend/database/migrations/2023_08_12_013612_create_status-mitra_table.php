@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('status_mitra', function (Blueprint $table) {
+        Schema::create('status_mitras', function (Blueprint $table) {
             $table->id();
+            $table->boolean('statusenabled');
             $table->string('namastatusmitra');
             $table->timestamps();
         });

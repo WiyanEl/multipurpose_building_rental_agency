@@ -24,11 +24,13 @@
     },
     setup() {
       const token = localStorage.getItem('token')
+      const idMitra = localStorage.getItem('idmitra')
       const toast = useToast()
       const router = useRouter()
       const isLoading = ref(false)
       const item = reactive({
-        data: []
+        data: [],
+        dataTambahan: []
       })
 
       onMounted(() => {
@@ -36,21 +38,21 @@
       })
 
       function init() {
-        let userId = ''
-        if (item.userid != undefined || item.userid != '') {
-          userId = '?userid=' + item.userid
+        let idmitra = ''
+        if (idMitra != undefined) {
+          idmitra = '?idmitra=' + idMitra
         }
-        let namaMitra = ''
-        if (item.namamitra != undefined || item.namamitra != '') {
-          namaMitra = '&namamitra=' + item.namamitra 
+        let idAset = ''
+        if (item.idaset != undefined) {
+          idAset = '&idaset=' + item.idaset 
         }
-        let eMail = ''
-        if (item.email != undefined || item.email != '') {
-          eMail = '&email=' + item.email
+        let namaAset = ''
+        if (item.namaaset != undefined) {
+          namaAset = '&namaaset=' + item.namaaset
         }
         isLoading.value = true
-        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        axios.get(`api/adminapp/get-data-mitra-nonvalidasi${userId}${namaMitra}${eMail}&status=0`)
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        axios.get(`api/pengelola/get-data-aset-mitra${idmitra}${idAset}${namaAset}`)
           .then((res) => {
             isLoading.value = false
             item.data = res.data.data
@@ -69,11 +71,132 @@
         init()
       }
 
+      function disabledAset(event, row) {
+        if (row == undefined) {
+          toast.error('Data belum terload', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+          return
+        }
+
+        let statusAset = 1;
+        if (row.statusaset == 'Aktif') {
+          statusAset = 0;
+        }
+
+        let jsonSave = {
+          idaset: row.idaset,
+          statusaset: statusAset
+        }
+
+        let btn = event.target
+        btn.innerHTML = `
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        `
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        axios.post('api/pengelola/update-status-aset', jsonSave)
+          .then((res) => {
+            toast.success(res.data.message, {
+              type: 'success',
+              position: 'top-right',
+              duration: '3000'
+            })
+            btn.innerHTML = event.target
+            item.data = []
+            init()
+          })
+          .catch((err) => {
+            toast.error('Terjadi Kesalahan Saat Simpan Gambar', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+            btn.innerHTML = event.target
+          })
+      }
+
+      function detailHargaTambahan(row) {
+        if (row == undefined) {
+          toast.error('Data belum terload', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+          return
+        }
+
+        item.namaAset = row.namaaset
+        item.deskripsi = row.deskripsi
+        item.hargaSewa = row.hargasewaaset
+        item.hargaDiskon = row.hargadiskonsewa
+
+        isLoading.value = true
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        axios.get(`api/pengelola/get-harga-tambahan-aset?idaset=${row.idaset}`)
+        .then((res) => {
+          isLoading.value = false
+          item.dataTambahan = res.data.data
+        })
+        .catch((err) => {
+          isLoading.value = false
+          toast.error('Terjadi kesalahan', {
+            type: 'error',
+            position: 'top-right',
+            duration: '3000'
+          })
+        })
+      }
+
+      function hapusAset(event, row) {
+        if (row == undefined) {
+          toast.error('Data belum terload', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+          return
+        }
+
+        let jsonSave = {
+          idaset: row.idaset
+        }
+
+        let btn = event.target
+        btn.innerHTML = `
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        `
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        axios.post('api/pengelola/hapus-aset', jsonSave)
+          .then((res) => {
+            toast.success(res.data.message, {
+              type: 'success',
+              position: 'top-right',
+              duration: '3000'
+            })
+            btn.innerHTML = event.target
+            item.data = []
+            init()
+          })
+          .catch((err) => {
+            toast.error('Terjadi Kesalahan Saat Hapus Aset', {
+              type: 'error',
+              position: 'top-right',
+              duration: '3000'
+            })
+            btn.innerHTML = event.target
+          })
+      }
+
       return {
         item,
         cari,
         isLoading,
         init,
+        disabledAset,
+        detailHargaTambahan,
+        hapusAset
       }
     }
   }
@@ -112,7 +235,7 @@
           </div>
           <div class="card mb-3">
             <div class="card-header">
-              <router-link to="/partnership/dashboard/kelola-aset/tambah" class="btn btn-warning">
+              <router-link to="/partnership/dashboard/kelola-aset/tambah" class="btn btn-warning" target="_blank">
                 <i class="bi bi-plus-circle-dotted"></i> Tambah Aset
               </router-link>
             </div>
@@ -134,28 +257,19 @@
                   <table-head v-text="sn.toString().padStart(2, '0')"/>
                 </template>
                 <template #tbody="{row}">
-                  <table-body>Gedung A</table-body>
-                  <table-body>Rp. 4000000</table-body>
+                  <table-body v-text="row.namaaset" />
+                  <table-body v-text="row.hargasewaaset" />
+                  <table-body v-text="row.hargadiskonsewa" />
+                  <table-body v-text="row.statusaset" />
                   <table-body>
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" aria-label="Recipient's username" :value="100000">
-                      <button class="btn btn-warning" type="button"><i class="bi bi-save"></i></button>
-                    </div>
-                  </table-body>
-                  <table-body>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" role="switch" value="false">
-                      <label class="form-check-label">Aktif</label>
-                    </div>
-                  </table-body>
-                  <!-- <table-body v-text="row.email" />
-                  <table-body v-text="row.alamat"/> -->
-                  <table-body>
-                    <router-link :to="{ path: '/partnership/dashboard/detail-aset-mitra/' + row.idmiitra }" class="btn btn-sm btn-success"><i class="bi bi-pencil-square"></i></router-link>
+                    <button type="button" class="btn btn-info btn-sm me-2"  data-bs-toggle="modal" data-bs-target="#modalDetailAset" @click="detailHargaTambahan(row)"><i class="bi bi-info-circle"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm me-2" @click="hapusAset($event, row)"><i class="bi bi-trash"></i></button>
+                    <button v-if="row.statusaset == 'Aktif'" type="button" class="btn btn-warning btn-sm" @click="disabledAset($event, row)"><i class="bi bi-slash-circle-fill"></i></button>
+                    <button v-if="row.statusaset != 'Aktif'" type="button" class="btn btn-warning btn-sm" @click="disabledAset($event, row)"><i class="bi bi-check-circle-fill"></i></button>
                   </table-body>
                 </template>
                 <template #empty>
-                  <TableBodyCell colspan="5">
+                  <TableBodyCell colspan="6">
                     <div class="text-center">No record found.</div>
                   </TableBodyCell>
                 </template>
@@ -169,4 +283,64 @@
       </div>
     </div>
   </div>
+
+  <!-- Start Modal Detail Aset -->
+  <div class="modal fade" data-bs-backdrop="static" id="modalDetailAset" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Tambahan Harga</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Nama Aset</label>
+            <input v-model="item.namaAset" type="text" class="form-control" disabled>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deskripsi</label>
+            <textarea v-model="item.deskripsi" cols="6" rows="4" class="form-control" disabled></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Harga Sewa</label>
+            <input v-model="item.hargaSewa" type="text" class="form-control" disabled>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Harga Diskon</label>
+            <input v-model="item.hargaDiskon" type="text" class="form-control" disabled>
+          </div>
+          <data-table :rows="item.dataTambahan" 
+          :loading="isLoading" 
+          @loadData="init" striped sn>
+            <template #thead-sn>
+              <table-head>SN</table-head>
+            </template>
+            <template #thead>
+              <table-head>Tambahan</table-head>
+              <table-head>Harga</table-head>
+              <table-head>Tersedia</table-head>
+              <table-head/>
+            </template>
+            <template #tbody-sn="{sn}">
+              <table-head v-text="sn.toString().padStart(2, '0')"/>
+            </template>
+            <template #tbody="{row}">
+              <table-body v-text="row.namatambahan" />
+              <table-body v-text="row.hargatambahan" />
+              <table-body v-text="row.sedia" />
+            </template>
+            <template #empty>
+              <TableBodyCell colspan="5">
+                <div class="text-center">No record found.</div>
+              </TableBodyCell>
+            </template>
+            <template #loading>
+              <div class="text-center">Loading...</div>
+            </template>
+          </data-table> 
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Modal Detail Aset -->
 </template>

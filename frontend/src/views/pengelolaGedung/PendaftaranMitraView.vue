@@ -15,6 +15,8 @@
         namamitra: '',
         notelp: '',
         norekening: '',
+        fasilitas: '',
+        kapasitas: '',
         alamat: '',
         linkmapsalamat: '',
         gambar: '',
@@ -76,6 +78,8 @@
         fromData.append('namamitra', this.item.namamitra)
         fromData.append('notelp', this.item.notelp)
         fromData.append('norekening', this.item.norekening)
+        fromData.append('fasilitas', this.item.fasilitas)
+        fromData.append('kapasitas', this.item.kapasitas)
         fromData.append('alamat', this.item.alamat)
         fromData.append('linkmapsalamat', this.item.linkmapsalamat)
 
@@ -173,7 +177,7 @@
   <div class="registrasi-page bg-info">
     <div class="row justify-content-center">
       <div class="col-12 col-lg-5">
-        <div class="card m-5 shadow">
+        <div class="card mb-3 mt-5 shadow">
           <div class="card-body">
             <div class="container">
               <h4 class="card-title">
@@ -182,6 +186,15 @@
               <p class="card-text">
                 Daftarkan aset Anda, biarkan Kami yang akan mendekatkan konsumen kepada Anda
               </p>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3 shadow">
+          <div class="card-body">
+            <div class="container">
+              <h4 class="card-title">
+                Biodata Mitra
+              </h4>
               <div class="mb-3">
                 <label class="form-label">Email</label>
                 <input v-model="item.email" type="email" class="form-control" disabled>
@@ -198,6 +211,23 @@
                 <label class="form-label">No Rekening</label>
                 <input v-model="item.norekening" type="text" class="form-control">
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3 shadow">
+          <div class="card-body">
+            <div class="container">
+              <h4 class="card-title">
+                Informasi Mitra
+              </h4>
+              <div class="mb-3">
+                <label class="form-label">Fasilitas</label>
+                <textarea v-model="item.fasilitas" class="form-control" rows="3"></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Maksimal Kapasitas</label>
+                <input v-model="item.kapasitas" type="text" class="form-control">
+              </div>
               <div class="mb-3">
                 <label class="form-label">Alamat Lengkap</label>
                 <input v-model="item.alamat" type="text" class="form-control">
@@ -210,10 +240,16 @@
                 <label class="form-label">Sample Gambar</label>
                 <input type="file" class="form-control" id="input-img-daftar" @change="getImage($event)">
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3 shadow">
+          <div class="card-body">
+            <div class="container">
               <div class="mb-3 d-grid gap-2">
                 <button type="button" class="btn btn-warning text-light rounded btn-full" @click="simpan($event)">Daftar</button>
               </div>
-              <div class="mb-3 text-center">
+              <div class="text-center">
                 <button type="button" class="btn btn-sm btn-info text-light" @click="logout($event)">Logout</button>
               </div>
             </div>

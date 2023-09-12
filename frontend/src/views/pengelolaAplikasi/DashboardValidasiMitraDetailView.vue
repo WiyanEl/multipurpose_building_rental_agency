@@ -39,6 +39,8 @@
             item.namamitra = data.namamitra
             item.norekening = data.norekening
             item.notelp = data.notelp
+            item.kapastitas = data.makskapasitas
+            item.fasilitas = data.fasilitas
           })
           .catch((err) => {
             isLoading.value = false
@@ -157,9 +159,24 @@
             <div class="card-body fs-5">
               <h5 class="card-title">{{ item.namamitra }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ item.namalengkap }}</h6>
-              <p class="card-text">
-                {{ item.alamat }}. Telp: {{ item.notelp }}. Email: {{ item.email }}. No. Rekening: {{ item.norekening }}
-              </p>
+              <div class="card-text">
+                {{ item.alamat }}
+              </div>
+              <div class="card-text">
+                Telp: {{ item.notelp }}
+              </div>
+              <div class="card-text">
+                Email: {{ item.email }}
+              </div>
+              <div class="card-text">
+                No. Rekening: {{ item.norekening }}
+              </div>
+              <div class="card-text">
+                Kapasitas: {{ item.kapastitas }} Orang
+              </div>
+              <div class="card-text">
+                Fasilitas: {{ item.fasilitas }}
+              </div>
               <a v-bind:href="item.linkmaps" target="_blank" class="card-link">Link G-Maps</a>
               <div class="mt-3">
                 <button type="button" class="btn btn-sm btn-success" @click="simpanValidasi($event)">

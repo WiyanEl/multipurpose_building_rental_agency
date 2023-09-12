@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gambar_asets', function (Blueprint $table) {
+        Schema::create('user_penyewas', function (Blueprint $table) {
             $table->id();
             $table->boolean('statusenabled');
-            $table->integer('idaset');
-            $table->string('namafile');
-            $table->string('filepath');
+            $table->integer('iduser');
+            $table->string('namalengkap');
+            $table->string('email');
+            $table->string('alamat');
+            $table->string('notelp');
+            $table->string('norekening');
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('namafile');
+        //
     }
 };

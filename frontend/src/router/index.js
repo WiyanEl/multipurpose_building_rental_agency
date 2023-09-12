@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +6,32 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('../views/calonPenyewa/HomeView.vue')
+    },
+    {
+      path: '/login',
+      name: 'loginPenyewa',
+      component: () => import('../views/calonPenyewa/LoginView.vue')
+    },
+    {
+      path: '/registrasi',
+      name: 'registrasiPenyewa',
+      component: () => import('../views/calonPenyewa/RegistrasiView.vue')
+    },
+    {
+      path: '/daftar-gedung/:lokasi/:kapasitas/:nMitra',
+      name: 'daftarGedungMitra',
+      component: () => import('../views/calonPenyewa/DaftarMitraView.vue')
+    },
+    {
+      path: '/daftar-gedung/detail/:id',
+      name: 'dataDetailMitra',
+      component: () => import('../views/calonPenyewa/DaftarMitraDetailView.vue')
+    },
+    {
+      path: '/daftar-gedung/detail/aset/:id',
+      name: 'dataDetailAsetMitra',
+      component: () => import('../views/calonPenyewa/DetailAsetMitraView.vue')
     },
     {
       path: '/partnership',
@@ -40,6 +64,11 @@ const router = createRouter({
       component: () => import('../views/pengelolaGedung/DashboardMitraView.vue')
     },
     {
+      path: '/partnership/dashboard/daftar-pesanan',
+      name: 'partnershipDashboardDataPesanan',
+      component: () => import('../views/pengelolaGedung/DashboardDataPesananView.vue')
+    },
+    {
       path: '/partnership/dashboard/kelola-aset',
       name: 'partnershipDashboardKelolaAset',
       component: () => import('../views/pengelolaGedung/DashboardKelolaAsetView.vue')
@@ -48,6 +77,16 @@ const router = createRouter({
       path: '/partnership/dashboard/kelola-aset/tambah',
       name: 'partnershipDashboardTambahAset',
       component: () => import('../views/pengelolaGedung/DashboardTambahAsetView.vue')
+    },
+    {
+      path: '/partnership/dashboard/kelola-diskon',
+      name: 'partnershipDashboardKelolaDiskon',
+      component: () => import('../views/pengelolaGedung/DashboardKelolaDiskonView.vue')
+    },
+    {
+      path: '/partnership/dashboard/kelola-diskon/tambah',
+      name: 'partnershipDashboardKelolaDiskonTambah',
+      component: () => import('../views/pengelolaGedung/DashboardKelolaDiskonTambahView.vue')
     },
     {
       path: '/adminapp/login',

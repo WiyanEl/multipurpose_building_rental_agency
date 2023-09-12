@@ -48,9 +48,15 @@
                 })
               } else if (res.data.data.user_role == 3) {
                 router.push({
-                  'path': '/partnership/daashboard'
+                  'path': '/partnership/dashboard'
                 })
               }
+            } else {
+              toast.error('Email atau Password salah', {
+                type: 'error',
+                location: 'top-right',
+                duration: '3000'
+              })
             }
             btn.innerHTML = 'Login'
           })

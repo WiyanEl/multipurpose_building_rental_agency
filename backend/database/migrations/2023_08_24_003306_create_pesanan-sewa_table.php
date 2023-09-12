@@ -13,17 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('aset_mitras', function (Blueprint $table) {
+        Schema::create('pesanan_sewas', function (Blueprint $table) {
             $table->id();
             $table->boolean('statusenabled');
+            $table->integer('idpenyewa');
             $table->integer('idmitra');
-            $table->string('namaaset');
-            $table->string('deskripsi');
-            $table->float('hargasewaaset');
-            $table->float('hargadiskonsewa');
-            $table->float('maxjamsewa');
-            $table->float('kapasitas');
-            $table->boolean('statusaset');
+            $table->integer('idaset');
+            $table->string('nosewa');
+            $table->float('hargasewa');
+            $table->float('hargadibayar');
+            $table->float('sisatagihansewa');
+            $table->float('totaltagihan');
+            $table->timestamp('tglawalsewa');
+            $table->timestamp('tglakhirsewa');
+            $table->timestamp('tgljatuhtempo');
+            $table->boolean('statuspesanan');
             $table->timestamps();
         });
     }

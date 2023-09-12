@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('harga_tambahan_aset', function (Blueprint $table) {
+        Schema::create('harga_tambahan_asets', function (Blueprint $table) {
             $table->id();
+            $table->boolean('statusenabled');
             $table->integer('idaset');
             $table->string('namatambahan');
             $table->float('hargatambahan');
+            $table->float('sedia');
             $table->boolean('statustambahan');
             $table->timestamps();
         });
